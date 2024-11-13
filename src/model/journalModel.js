@@ -18,4 +18,32 @@ async function getAllJournals() {
     return journals;
 }
 
-module.exports = { createJournal, getAllJournals }
+async function getJournalById(journal_id) {
+    const journalRef = await db
+    .collection("journals")
+    .where("journal_id", "==", journal_id)
+    .get()
+
+    let journal;
+    journalRef.forEach((item) => {
+        journal = item.data();
+    });
+    return journal;
+}
+
+async function getLatestJournal() {
+    const journalRef = await db
+    .collection('journals')
+    .orderBy('created', 'desc')
+    .limit(1)
+    .get();
+    
+    let journal;
+    journalRef.forEach((item) => {
+        journal = item.data();
+    })
+    return journal
+}
+console.log(getLatestJournal)
+
+module.exports = { createJournal, getAllJournals, getJournalById, getLatestJournal }
