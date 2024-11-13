@@ -11,11 +11,11 @@ const cors = require('cors');
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.use((error, req, res, next) => {
-  res.status(400).json({
-    message: error.message,
-  });
-});
+// app.use((error, req, res, next) => {
+//   res.status(400).json({
+//     message: error.message,
+//   });
+// });
 
 app.use(
   cors({
