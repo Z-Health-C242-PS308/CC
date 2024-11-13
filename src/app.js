@@ -1,6 +1,6 @@
 const express = require('express')
 require("dotenv").config();
-const multer = require('multer');
+
 
 const journalRoute = require('./routes/journalRoutes')
 
@@ -24,9 +24,9 @@ app.use(
   })
 );
 
-const upload = multer();
+// const upload = multer();
 
-app.use('/journal', upload.none(), journalRoute)
+app.use('/journal', journalRoute)
 
 app.listen(port, () => {
     console.log(`Listening on http://localhost:${port}`);

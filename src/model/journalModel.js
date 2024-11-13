@@ -6,4 +6,16 @@ async function createJournal(id, data) {
     return journalCollection.doc(id).set(data)
 }
 
-module.exports = { createJournal }
+async function getAllJournals() {
+    const journalsRef = await db.collection("journals").get();
+    const journals = [];
+
+    journalsRef.forEach(doc => {
+        journals.push(doc.data());
+    })
+
+    console.log(journals)
+    return journals;
+}
+
+module.exports = { createJournal, getAllJournals }
