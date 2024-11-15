@@ -3,6 +3,7 @@ require("dotenv").config();
 
 
 const journalRoute = require('./routes/journalRoutes')
+const userRoute = require('./routes/userRoutes')
 
 const app = express()
 const port = 8080
@@ -27,6 +28,7 @@ app.use(
 // const upload = multer();
 
 app.use('/journal', journalRoute)
+app.use('/', userRoute);
 
 app.listen(port, () => {
     console.log(`Listening on http://localhost:${port}`);

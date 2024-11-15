@@ -1,10 +1,10 @@
-// const { Firestore } = require("@google-cloud/firestore");
-// const db = new Firestore({keyFilename:process.env.SERVICE_KEY});
+const {Firestore} = require("@google-cloud/firestore");
+const db = new Firestore();
 
-// async function storeData(id, data) {
-//   const usersCollection = db.collection("users");
-//   return usersCollection.doc(id).set(data);
-// }
+async function inputUser(id, data) {
+  const usersCollection = db.collection("users");
+  return usersCollection.doc(id).set(data);
+}
 
 // async function getUsers(username) {
 //   try {
@@ -67,4 +67,6 @@
 //   return data;
 // }
 
-// module.exports = { storeData, getUsers, getUserById, updateProfil, getUserbyid };
+module.exports = { inputUser
+    // , getUsers, getUserById, updateProfil, getUserbyid
+ };
