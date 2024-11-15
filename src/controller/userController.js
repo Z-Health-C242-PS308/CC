@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 require('dotenv').config()
 
 const { generateAccessToken } = require('../middleware/authToken');
-const { inputUser } = require('../model/userModel')
+const { inputUser, getUsers } = require('../model/userModel')
 
 const registerController = async (req, res) => {
     const { username, password, confirmPass, nama_lengkap, email, no_hp} = req.body;
@@ -18,7 +18,6 @@ const registerController = async (req, res) => {
     }
     // console.log(profile_img);
     // console.log(password);
-
 
     let hashedPass = await bcrypt.hashSync(password, 10);
     const newUser = {
@@ -48,4 +47,47 @@ const registerController = async (req, res) => {
 }
 
 
-module.exports = { registerController }
+const loginController = async (req, res) => {
+    const { username, password } = req.body
+
+    const userSnapshot = await getUsers(username);
+    if (userSnapshot.empty) {
+        return res.status(400).json({
+            error: true,
+            message: 'User tidak ada, please register!'
+        })
+        return false;
+    }
+
+    let userRef;
+    userSnapshot.forEach(user => {
+        userRef = user.data()
+    })
+    const isValid = bcrypt.compareSync(password, userRef.password);
+
+    if (!isValid) {
+        return res.status(404).json({
+            error: true,
+            message: 'Password Salah!'
+        })
+    }
+
+    userRef.token = generateAccessToken(username);
+
+    return res.status(200).json({
+        error: false,
+        message: 'Login Berhasil !',
+        user: userRef
+    })
+}
+
+const onLoginController = (req, res) => {
+    const data = res.locals.jwt;
+
+    res.status(200).json({
+        error: false,
+        message: data
+    });
+}
+
+module.exports = { registerController, loginController, onLoginController }

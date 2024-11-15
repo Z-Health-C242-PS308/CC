@@ -10,7 +10,7 @@ const router = express.Router();
 router.post('/register', multer.single("profile_img"), bucketUpload.uploadToBucket, registerController);
 router.post('/login', multer.none(), loginController);
 
-// router.get('/auth', verifyToken, onLoginController);
+router.get('/auth', verifyToken, onLoginController);
 // router.put('/profile/:id', verifyToken, multer.single('profile_image'), bucketUpload.uploadToBucket, updateProfilController);
 // router.get('/profile/:id', getUserbyidController);
 

@@ -6,25 +6,25 @@ async function inputUser(id, data) {
   return usersCollection.doc(id).set(data);
 }
 
-// async function getUsers(username) {
-//   try {
-//     const usersRef = await db.collection("users");
-//     const userSnapshot = await usersRef.where("username", "==", username).get();
-//     // const passRef = await usersRef.where('username','==',username).get();
-//     // console.log(userSnapshot);
-//     return userSnapshot;
+async function getUsers(username) {
+  try {
+    const usersRef = await db.collection("users");
+    const userSnapshot = await usersRef.where("username", "==", username).get();
+    // const passRef = await usersRef.where('username','==',username).get();
+    // console.log(userSnapshot);
+    return userSnapshot;
 
-//     // const documents = [];
-//     // getAll.forEach(doc => {
-//     //     const document = { id: doc.data().user_id, password: doc.data().password, data: doc.data() };
-//     //     documents.push(document);
-//     // })
+    // const documents = [];
+    // getAll.forEach(doc => {
+    //     const document = { id: doc.data().user_id, password: doc.data().password, data: doc.data() };
+    //     documents.push(document);
+    // })
 
-//     // console.log(getAll);
-//   } catch (error) {
-//     throw new Error(error.message);
-//   }
-// }
+    // console.log(getAll);
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
 
 // async function getUserById(user_id) {
 //   const userRef = await db
@@ -67,6 +67,6 @@ async function inputUser(id, data) {
 //   return data;
 // }
 
-module.exports = { inputUser
+module.exports = { inputUser, getUsers
     // , getUsers, getUserById, updateProfil, getUserbyid
  };
