@@ -10,17 +10,18 @@ async function getUsers(username) {
   try {
     const usersRef = await db.collection("users");
     const userSnapshot = await usersRef.where("username", "==", username).get();
-    // const passRef = await usersRef.where('username','==',username).get();
-    // console.log(userSnapshot);
-    return userSnapshot;
+    // return userSnapshot;
 
-    // const documents = [];
-    // getAll.forEach(doc => {
-    //     const document = { id: doc.data().user_id, password: doc.data().password, data: doc.data() };
-    //     documents.push(document);
-    // })
+    let data = null;
+    userSnapshot.forEach((item) => {
+        // data.push(item.data());
+        data = item.data();
+        // console.log(data);
+    });
 
-    // console.log(getAll);
+
+    return data;
+
   } catch (error) {
     throw new Error(error.message);
   }
@@ -40,33 +41,38 @@ async function getUsers(username) {
 
 // }
 
-// async function updateProfil(id, newData) {
-//   const userRef = await db.collection("users").doc(id);
+async function updateProfil(id, newData) {
+  const userRef = await db.collection("users").doc(id);
 
-//   if (newData.avatar_img === undefined) {
-//     throw new Error("avatar kosong");
-//   }
+  if (newData.profile_img === undefined) {
+    throw new Error("avatar kosong");
+  }
 
-//   await userRef.update(newData);
-//   // console.log(newData.avatar_image);
+  await userRef.update(newData);
+}
 
-//   // return updated
-// }
-
-// async function getUserbyid (user_id){
-//   const userRef = await db
-//       .collection("users")
-//       .where("user_id", "==", user_id)
-//       .get();
+async function getUserbyid(user_id){
+  const userRef = await db
+      .collection("users")
+      .where("user_id", "==", user_id)
+      .get();
 
 //   let data = [];
 //   userRef.forEach((item) => {
 //       data.push(item.data());
-//       console.log(data);
+//     //   console.log(data);
 //   });
 //   return data;
-// }
 
-module.exports = { inputUser, getUsers
-    // , getUsers, getUserById, updateProfil, getUserbyid
- };
+let data = null;
+userRef.forEach((item) => {
+    // data.push(item.data());
+    data = item.data();
+    // console.log(data);
+});
+
+
+return data;
+}
+
+module.exports = { inputUser, getUsers, updateProfil, getUserbyid };
