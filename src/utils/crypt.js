@@ -1,6 +1,9 @@
 const crypto = require('crypto');
 require('dotenv').config();
 
+const keyRandom = crypto.randomUUID();
+const ivRandom = crypto.randomUUID();
+
 const algorithm = 'aes-256-cbc'; // Algoritma enkripsi
 const key = Buffer.from(process.env.ENCRYPTION_KEY, 'hex');
 const iv = Buffer.from(process.env.ENCRYPTION_IV, 'hex');
@@ -13,9 +16,6 @@ function encrypt(text) {
 }
 
 function decrypt(encrypted) {
-    // Pisahkan IV dan teks terenkripsi
-
-    // console.log(encrypted)
 
     const parts = encrypted.split(':');
     const iv = Buffer.from(parts[0], 'hex');

@@ -1,5 +1,4 @@
 const crypto = require('crypto');
-const bcrypt = require('bcrypt');
 require('dotenv').config()
 
 const { generateAccessToken } = require('../middleware/authToken');
@@ -7,9 +6,10 @@ const { inputUser, getUsers, updateProfil, getUserbyid } = require('../model/use
 const { encrypt, decrypt } = require('../utils/crypt')
 
 const registerCtrl = async (req, res) => {
-    const { username, password, confirmPass, nama_lengkap, email, no_hp} = req.body;
+    const { fullname, password, confirmPass, birthdate, email } = req.body;
     const profile_img = req.file.cloudStoragePublicUrl;
     const user_id = crypto.randomUUID();
+    const createdAt = new Date().toISOString();
 
     if (password !== confirmPass) {
         return res.status(400).json({
@@ -18,17 +18,15 @@ const registerCtrl = async (req, res) => {
         });
     }
 
-    // let hashedPass = await bcrypt.hashSync(password, 10);
     const encryptedPassword = encrypt(password);
     const newUser = {
         user_id: user_id,
-        username: username,
-        nama_lengkap: nama_lengkap,
+        fullname: fullname,
+        birthdate: birthdate,
         email: email,
         password: 
-        // hashedPass,
         encryptedPassword,
-        no_hp: no_hp,
+        createdAt: createdAt,
         profile_img: profile_img
     }
     try {
@@ -48,31 +46,17 @@ const registerCtrl = async (req, res) => {
     }
 }
 
-
 const loginCtrl = async (req, res) => {
-    const { username, password } = req.body
+    const { email, password } = req.body
 
-    const userSnapshot = await getUsers(username);
+    const userSnapshot = await getUsers(email);
 
-    // console.log(userSnapshot)
-
-    // console.log("cek", userSnapshot.password)
-
-   
-    
-    // console.log(checkPassword)
     if (userSnapshot.empty) {
         return res.status(400).json({
             error: true,
             message: 'User tidak ada, please register!'
         })
     }
-
-    // let userRef;
-    // userSnapshot.forEach(user => {
-    //     userRef = user.data()
-    // })
-    // const isValid = bcrypt.compareSync(password, userRef.password);
 
     const checkPassword = decrypt(userSnapshot.password)
 
@@ -83,7 +67,9 @@ const loginCtrl = async (req, res) => {
         })
     }
 
-    userSnapshot.token = generateAccessToken(username);
+    console.log(userSnapshot.email)
+
+    userSnapshot.token = generateAccessToken(email);
 
     return res.status(200).json({
         error: false,
@@ -104,26 +90,18 @@ const onLoginCtrl = (req, res) => {
 const updateProfilCtrl = async (req, res) => {
     const user_id = req.params.id
     const ava = req.file.cloudStoragePublicUrl
-    const { username, nama_lengkap, email, password, no_hp } = req.body;
-    // console.log(req.headers)
-    console.log(ava)
+    const { fullname, email, password, birthdate } = req.body;
 
     try {
         const user = await getUserbyid(user_id);
 
-        console.log(user.password)
-
-        // const decryptedPassword = decrypt(user.password);
-
         const data = {
             user_id: user_id,
-            username: username || user.username,
-            nama_lengkap: nama_lengkap || user.nama_lengkap,
+            birthdate: birthdate || user.birthdate,
+            fullname: fullname || user.fullname,
             email: email || user.email,
             password: password || 
             user.password,
-            // decryptedPassword,
-            no_hp: no_hp || user.no_hp,
             profile_img: ava || user.profile_img
         }
 
@@ -150,7 +128,6 @@ const updateProfilCtrl = async (req, res) => {
 
 const getUserbyidCtrl = async (req, res) => {
     const { id } = req.params;
-    // console.log(id)
     try {
         const user = await getUserbyid(id);
         
@@ -158,13 +135,11 @@ const getUserbyidCtrl = async (req, res) => {
 
         const data = {
             user_id: user.user_id,
-            username: user.username,
-            nama_lengkap: user.nama_lengkap,
+            birthdate: user.birthdate,
+            fullname: user.fullname,
             email: user.email,
             password: 
-            // user.password,
             decryptedPass,
-            no_hp: user.no_hp,
             profile_img: user.profile_img
         }
 

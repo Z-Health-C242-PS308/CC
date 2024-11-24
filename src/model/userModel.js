@@ -6,19 +6,15 @@ async function inputUser(id, data) {
   return usersCollection.doc(id).set(data);
 }
 
-async function getUsers(username) {
+async function getUsers(email) {
   try {
     const usersRef = await db.collection("users");
-    const userSnapshot = await usersRef.where("username", "==", username).get();
-    // return userSnapshot;
+    const userSnapshot = await usersRef.where("email", "==", email).get();
 
     let data = null;
     userSnapshot.forEach((item) => {
-        // data.push(item.data());
         data = item.data();
-        // console.log(data);
     });
-
 
     return data;
 
@@ -27,19 +23,6 @@ async function getUsers(username) {
   }
 }
 
-// async function getUserById(user_id) {
-//   const userRef = await db
-//     .collection("users")
-//     .where("user_id", "==", user_id)
-//     .get();
-
-//   let data;
-//   userRef.forEach((item) => {
-//     data = item.data();
-//   });
-//   return data;
-
-// }
 
 async function updateProfil(id, newData) {
   const userRef = await db.collection("users").doc(id);
@@ -57,18 +40,9 @@ async function getUserbyid(user_id){
       .where("user_id", "==", user_id)
       .get();
 
-//   let data = [];
-//   userRef.forEach((item) => {
-//       data.push(item.data());
-//     //   console.log(data);
-//   });
-//   return data;
-
 let data = null;
 userRef.forEach((item) => {
-    // data.push(item.data());
     data = item.data();
-    // console.log(data);
 });
 
 

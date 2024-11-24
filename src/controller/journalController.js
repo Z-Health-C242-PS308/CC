@@ -2,7 +2,6 @@ const crypto = require('crypto');
 
 const { createJournal, getAllJournals, getJournalById, getLatestJournal } = require("../model/journalModel")
 
-// const journals = []
 
 const createJournalCtrl = async (req, res) => {
     const { keluhan, mood } = req.body
@@ -61,7 +60,6 @@ const getAllJournalsCtrl = async (req, res) => {
         });
     }
 }
-// console.log(getAllJournalsCtrl)
 
 const getLatestJournalCtrl = async (req, res) => {
     try {
