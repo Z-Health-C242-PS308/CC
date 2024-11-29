@@ -4,32 +4,33 @@ const { createJournal, getAllJournals, getJournalById, getLatestJournal } = requ
 
 
 const createJournalCtrl = async (req, res) => {
-    const { keluhan, mood } = req.body
+    const { user_id, waktu_belajar, waktu_belajar_tambahan, waktu_tidur, aktivitas_sosial, aktivitas_fisik, jurnal_harian } = req.body
+
+    if (isNaN(parseFloat(waktu_belajar)) || isNaN(parseFloat(waktu_belajar_tambahan)) || isNaN(parseFloat(waktu_tidur)) || isNaN(parseFloat(aktivitas_sosial)) || isNaN(parseFloat(aktivitas_fisik))) {
+        return res.status(400).json({ message: 'Input waktu dan aktivitas harus berupa angka!' });
+    }
+
     const journal_id = crypto.randomUUID()
     const createdAt = new Date().toISOString();
 
     const newJournal = {
         journal_id: journal_id,
-        keluhan: keluhan,
-        mood: mood,
+        user_id: user_id,
+        waktu_belajar: parseFloat(waktu_belajar),
+        waktu_belajar_tambahan: parseFloat(waktu_belajar_tambahan),
+        waktu_tidur: parseFloat(waktu_tidur),
+        aktivitas_sosial: parseFloat(aktivitas_sosial),
+        aktivitas_fisik: parseFloat(aktivitas_fisik),
+        jurnal_harian: jurnal_harian,
         created: createdAt
     }
 
-    console.log(newJournal)
-
-    // opsional criteria
-
-    if (!keluhan) {
+    if (!newJournal) {
         return res.status(404).json ({
             error: true,
-            message: "tolong isi keluhannya !"
+            message: "harap diisi yang lengkap ya !"
         })
-    } else if (!mood) {
-        return res.status(404).json ({
-            error: true,
-            message: "moodnya juga disampaikan !"
-        })
-    }
+    } 
 
     try {
             await createJournal(journal_id, newJournal)
