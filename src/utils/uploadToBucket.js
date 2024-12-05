@@ -1,11 +1,11 @@
 const { Storage } = require('@google-cloud/storage');
 
 const storage = new Storage({
-    projectId: 'z-health-13122024',
+    projectId: 'z-healths',
     keyFilename: process.env.GCP_CREDENTIALS
 });
 
-const bucketName = "z-health-storage";
+const bucketName = "z-health-bucket23";
 const bucket = storage.bucket(bucketName);
 
 function imgUrlBucket(filename) {

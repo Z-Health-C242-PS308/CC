@@ -7,5 +7,4 @@ const multer = Multer({
     }
 })
 
-
 module.exports = multer;

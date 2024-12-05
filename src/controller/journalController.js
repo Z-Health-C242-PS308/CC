@@ -1,7 +1,8 @@
 const crypto = require('crypto');
+require("dotenv").config();
 
-const { createJournal, getAllJournals, getJournalById, getLatestJournal } = require("../model/journalModel")
-
+const { createJournal, getAllJournals, getJournalById, getLatestJournal } = require("../model/journalModel");
+const { default: axios } = require('axios');
 
 const createJournalCtrl = async (req, res) => {
     const { user_id, waktu_belajar, waktu_belajar_tambahan, waktu_tidur, aktivitas_sosial, aktivitas_fisik, jurnal_harian } = req.body
@@ -33,16 +34,36 @@ const createJournalCtrl = async (req, res) => {
     } 
 
     try {
-            await createJournal(journal_id, newJournal)
+        const predict = await axios.post(`${process.env.ML_API}`, {
+            waktu_belajar: parseFloat(waktu_belajar),
+            waktu_belajar_tambahan: parseFloat(waktu_belajar_tambahan),
+            waktu_tidur: parseFloat(waktu_tidur),
+            aktivitas_sosial: parseFloat(aktivitas_sosial),
+            aktivitas_fisik: parseFloat(aktivitas_fisik),
+            jurnal_harian: jurnal_harian
+        }, {
+            headers: {
+                'Content-Type': 'application/json',  
+            }
+        })
+
+        const fullJournal = {
+            ...newJournal,
+            predict: predict.data
+        }
+
+        console.log(fullJournal)
+
+            await createJournal(journal_id, fullJournal)
             return res.status(200).json ({
                 error: false,
                 message: "journal telah dibuat",
-                journal: newJournal
+                journal: fullJournal
             })
     } catch(e) {
         return res.status(500).json({
             error: true,
-            message: 'Gagal membuat donasi: ' + e.message,
+            message: 'Gagal membuat journal: ' + e.message,
         });
     }
 }
