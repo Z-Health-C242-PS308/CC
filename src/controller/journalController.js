@@ -1,7 +1,7 @@
 const crypto = require('crypto');
 require("dotenv").config();
 
-const { createJournal, getAllJournals, getJournalById, getLatestJournal } = require("../model/journalModel");
+const { createJournal, getAllJournals, getJournalById, getLatestJournal, getWeekLatestJournal } = require("../model/journalModel");
 const { default: axios } = require('axios');
 
 const createJournalCtrl = async (req, res) => {
@@ -109,6 +109,30 @@ const getLatestJournalCtrl = async (req, res) => {
     }
 }
 
+const getWeekLatestJournalCtrl = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const lastjournal = await getWeekLatestJournal(id);
+        console.log(lastjournal)
+
+        if (!lastjournal) {
+            return res.status(404).json({
+                message: 'Journal terakhir tidak ditemukan!'
+            })
+        }
+
+        return res.status(200).json({
+            message: 'Journal terakhir telah ditampilkan!',
+            journal: lastjournal
+        })
+    } catch(e) {
+        return res.status(500).json({
+            message: e.message,
+        });
+    }
+}
+
 const getJournalByIdCtrl = async (req, res) => {
     const { id } = req.params;
 
@@ -132,4 +156,4 @@ const getJournalByIdCtrl = async (req, res) => {
     }
 }
 
-module.exports = { createJournalCtrl, getAllJournalsCtrl, getJournalByIdCtrl, getLatestJournalCtrl }
+module.exports = { createJournalCtrl, getAllJournalsCtrl, getJournalByIdCtrl, getLatestJournalCtrl, getWeekLatestJournalCtrl }

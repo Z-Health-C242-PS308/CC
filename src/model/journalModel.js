@@ -48,6 +48,22 @@ async function getLatestJournal(user_id) {
     })
     return journal
 }
-console.log(getLatestJournal)
 
-module.exports = { createJournal, getAllJournals, getJournalById, getLatestJournal }
+async function getWeekLatestJournal(user_id) {
+    const journalRef = await db
+    .collection('journals')
+    .where("user_id", "==", user_id)
+    .orderBy('created', 'desc')
+    .limit(7)
+    .get();
+    
+    const journals = [];
+
+    journalRef.forEach(doc => {
+        journals.push(doc.data());
+    })
+    return journals;
+}
+// console.log(getLatestJournal)
+
+module.exports = { createJournal, getAllJournals, getJournalById, getLatestJournal, getWeekLatestJournal }

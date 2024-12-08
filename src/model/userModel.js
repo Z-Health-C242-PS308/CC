@@ -11,6 +11,10 @@ async function getUsers(email) {
     const usersRef = await db.collection("users");
     const userSnapshot = await usersRef.where("email", "==", email).get();
 
+    if (userSnapshot.empty) {
+      return null; // Tidak ada pengguna dengan email ini
+    }
+
     let data = null;
     userSnapshot.forEach((item) => {
         data = item.data();

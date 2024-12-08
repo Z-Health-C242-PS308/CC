@@ -6,8 +6,8 @@ const { inputUser, getUsers, updateProfil, getUserbyid } = require('../model/use
 const { encrypt, decrypt } = require('../utils/crypt')
 
 const registerCtrl = async (req, res) => {
-    const { fullname, password, confirmPass, birthdate, email } = req.body;
-    const profile_img = req.file.cloudStoragePublicUrl;
+    const { fullname, password, confirmPass, birthdate, email, profile_img } = req.body;
+    // const profile_img = req.file.cloudStoragePublicUrl;
     const user_id = crypto.randomUUID();
     const createdAt = new Date().toISOString();
 
@@ -16,6 +16,15 @@ const registerCtrl = async (req, res) => {
             error: true,
             message: 'Password tidak cocok!'
         });
+    }
+
+    const existingUser = await getUsers(email);
+
+    if (existingUser) {
+      return res.status(400).json({
+        error: true,
+        message: 'Email sudah ada'
+      });
     }
 
     const encryptedPassword = encrypt(password);
