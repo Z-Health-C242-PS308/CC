@@ -6,8 +6,11 @@ async function createJournal(id, data) {
     return journalCollection.doc(id).set(data)
 }
 
-async function getAllJournals() {
-    const journalsRef = await db.collection("journals").get();
+async function getAllJournals(user_id) {
+    const journalsRef = await db
+    .collection("journals")
+    .where("user_id", "==", user_id)
+    .get();
     const journals = [];
 
     journalsRef.forEach(doc => {
@@ -31,9 +34,10 @@ async function getJournalById(journal_id) {
     return journal;
 }
 
-async function getLatestJournal() {
+async function getLatestJournal(user_id) {
     const journalRef = await db
     .collection('journals')
+    .where("user_id", "==", user_id)
     .orderBy('created', 'desc')
     .limit(1)
     .get();

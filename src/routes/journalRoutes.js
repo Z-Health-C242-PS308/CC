@@ -5,8 +5,8 @@ const { createJournalCtrl, getAllJournalsCtrl, getJournalByIdCtrl, getLatestJour
 const upload = multer();
 
 router.post('/', upload.none(), createJournalCtrl)
-router.get('/', getAllJournalsCtrl)
-router.get('/latest', getLatestJournalCtrl)
+router.get('/all/:id', getAllJournalsCtrl)
+router.get('/latest/:id', getLatestJournalCtrl)
 router.get('/:id', getJournalByIdCtrl)
 
 module.exports = router;

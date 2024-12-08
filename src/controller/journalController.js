@@ -69,8 +69,10 @@ const createJournalCtrl = async (req, res) => {
 }
 
 const getAllJournalsCtrl = async (req, res) => {
+    const { id } = req.params
+
     try {
-        const journals = await getAllJournals();
+        const journals = await getAllJournals(id);
 
         return res.status(200).json({
             message: 'Semua journal berhasil ditampilkan!',
@@ -84,8 +86,10 @@ const getAllJournalsCtrl = async (req, res) => {
 }
 
 const getLatestJournalCtrl = async (req, res) => {
+    const { id } = req.params;
+
     try {
-        const lastjournal = await getLatestJournal();
+        const lastjournal = await getLatestJournal(id);
         console.log(lastjournal)
 
         if (!lastjournal) {
